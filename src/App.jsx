@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 // import reactLogo from './assets/react.svg'
 import './App.css'
-import './../../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { v4 as uuidv4 } from 'uuid'
-
+import { ToastContainer, toast } from 'react-toastify';
 function App() {
   const [taskName, setTaskName] = useState('');
   const [taskRegion, setTaskRegion] = useState('');
@@ -19,19 +19,57 @@ function App() {
     };
 
     if (taskName.trim().length === 0 || taskRegion.trim().length === 0 || data.trim().length === 0) {
-      alert("ПОЖАЛУЙСТА, ЗАПОЛНИТЕ ЗАДАНИЕ")
+      toast.error("пожалуйста, заполните задание", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      })
     }
     else {
       setTask([...task, newTask]);
       setTaskName("");
       setTaskRegion("");
       setData("");
+      toast.success("успешно добавлена", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      })
 
     }
   };
 
+  const deleteTask = (id) => {
+    console.log(id);
+    const filterTask = task.filter((el) => {
+      return el.id !== id;
+    })
+    setTask(filterTask)
+    toast.info("данные успешно удалены", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    })
+  }
+
   return (
     <>
+      <ToastContainer />
       <div class="container">
         <div class="form">
           <input type="text" class="input" placeholder='Введите ваше имя ...'
@@ -58,7 +96,10 @@ function App() {
             {
               task.length > 0 ? task.map((e, i) => {
                 return (
-                  <tr key={e.id}><td>{i + 1}</td><td>{e.taskName}</td><td>{e.taskRegion}</td><td>{e.deadline}</td><td><button className='btn btn-danger'>Удалить</button></td></tr>
+                  <tr key={e.id}><td>{i + 1}</td><td>{e.taskName}</td><td>{e.taskRegion}</td><td>{e.deadline}</td><td>
+                    <button className='btn btn-danger' onClick={() => {
+                      deleteTask(e.id)
+                    }} >Удалить</button></td></tr>
                 )
 
               }) : 'НЕ НАЙДЕН'
